@@ -1,12 +1,16 @@
 <?php
 include 'include/database.php';
 include 'include/functions.php';
+include 'include/config.php';
+
 include 'include/header.php';
+
+$errorMessage ='';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    // $hashed_password =SH1($_POST['password'];) 
+    // $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $password = $_POST['password'];
 
     $sql = "SELECT * FROM users WHERE email = :email AND password = :password AND active = 1";
    
@@ -22,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: dashboard.php');
         die();
     } else {
-        echo "user not found";
+       $errorMessage = 'Invalid email or password';
     }
     
 
@@ -63,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="row d-flex justify-content-center mt-5">
         <div class="col-md-6 px-5">
             <form class="px-5 py-4 " method="POST" action="<?php $_SERVER['PHP_SELF'];?>">
-                <div class="px-5 text-center">
-                    <h3>Welcome back!</h3>
+                <div class="px-5 text-center py-2">
+                    <h4>Welcome back!</h4>
                 </div>
 
                 <div class="mb-3 px-5">
@@ -76,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="mb-3 px-5">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
                     <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                    <p class="text-sm text-danger pb-2 pt-1"><?=$errorMessage;?></p>
                 </div>
 
                 <div class="mb-3 px-5">
