@@ -1,7 +1,8 @@
 <?php
+include 'include/config.php';
 include 'include/database.php';
 include 'include/functions.php';
-include 'include/config.php';
+
 
 include 'include/header.php';
 
@@ -20,13 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $stement->fetch(PDO::FETCH_ASSOC);
     
     if ($user) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['user_name'] = $user['username'];
         $_SESSION['user_email'] = $user['email'];
         header('Location: dashboard.php');
         die();
     } else {
-       $errorMessage = 'Invalid email or password';
+       $errorMessage = "Please provide your email or password";
     }
     
 

@@ -1,12 +1,11 @@
 <?php
 
 function secure(){
-
-    $loginMessage="";
-
-    if(!isset($_SESSION['id'])){
-        $loginMessage="Please login in login first!";
-       header("Location:index.php");
+    
+    if(!isset($_SESSION['user_id'])){
+       
+        echo "please enter login details";
+    //    header("Location:index.php");
         die();
     }
     

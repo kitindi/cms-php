@@ -1,10 +1,11 @@
 <?php
-include 'include/database.php';
 include 'include/config.php';
+include 'include/database.php';
 include 'include/functions.php';
 
 secure();
 include 'include/header.php';
+
 
 
 ?>
