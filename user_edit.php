@@ -3,37 +3,46 @@ include 'include/config.php';
 include 'include/database.php';
 include 'include/functions.php';
 
-
+secure();
 include 'include/header.php';
 
 $errorMessage ='';
+$id = $_GET['user_id'];
+$user_name ='';
+$user_email='';
+$status ='';
+$user_role='';
+
+if(isset($_GET['user_id'])){
+
+    $sql = "SELECT * FROM users WHERE user_id= :id";
+    $statement = $conn ->prepare($sql);
+    $statement ->execute([':id' =>$id]);
+    $user = $statement ->fetch(PDO::FETCH_ASSOC);
+
+
+    // store the user current information
+
+    $user_name = $user['username'];
+    $user_email = $user['email'];
+    $status = $user['active'];
+    $user_role = $user['role'];
+   
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    // $confirm_password = password_hash($_POST['confirm_password'], PASSWORD_DEFAULT);
+    $active = $_POST['active'];
+    $role = $_POST['role'];
 
-    // echo $confirm_password."<br>";
-    // echo $password;
-    // echo $email;
-    // echo $username;
-
-//    check if user already exists
-    $sql = "SELECT * FROM users WHERE email = :email AND active = 1";
-    $stement = $conn->prepare($sql);
-    $stement->execute(['email' => $email]);
-    $user = $stement->fetch(PDO::FETCH_ASSOC);
-    if ($user) {
-        $errorMessage = "User already exists";
-    }else{
         // insert user into database
-          $sql = "INSERT INTO users (email, password, username) VALUES (:email, :password, :username)";
-            $stement = $conn->prepare($sql);
-            $stement->execute(['email' => $email, 'password' => $password, 'username' => $username]);
-            header('Location: index.php');
-            die();
-    }
+    $sql = "UPDATE users SET active =:active, email =:email, role =:role, username = :username WHERE user_id= :id";
+    $stement = $conn->prepare($sql);
+     $stement->execute(['email' => $email,'username' => $username, 'active' => $active, 'role' => $role, 'id'=>$id]);
+    header('Location: users.php');
+     die();
+    
     
 
 }
@@ -72,27 +81,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
         <div class="col-md-6 px-5">
-            <form class="px-5 py-3 " method="POST" action="<?php $_SERVER['PHP_SELF'];?>">
+            <form class="px-5 py-3 " method="POST" action="<?php htmlspecialchars($_SERVER['PHP_SELF']);?>">
                 <div class="px-5 text-center mb-5">
                     <h4>Update User Information</h4>
                 </div>
                 <div class="mb-3 px-5">
                     <label for="exampleInputPassword1" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="exampleInputPassword1" name="username">
+                    <input type="text" class="form-control" id="exampleInputPassword1" name="username"
+                        value="<?=$user_name;?>">
                 </div>
                 <div class="mb-3 px-5">
                     <label for="exampleInputEmail1" class="form-label">Email address</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        name="email" required>
+                        name="email" required value="<?=$user_email;?>">
 
                 </div>
                 <div class="mb-4 px-5">
                     <label for="exampleInputPassword1" class="form-label">User status</label>
 
                     <select class="form-select form-select-sm" aria-label="Small select example" name="active">
-                        <option value="1">Active</option>
-                        <option value="2">Not Active</option>
-
+                        <option value="<?=$status;?>">Current status: <?=$status?></option>
+                        <option value="<?=$status == 'active' ? 'not active':'active';?>">
+                            <?=$status == 'active' ? 'not active':'active';?></option>
                     </select>
                 </div>
 
@@ -100,16 +110,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label for="exampleInputPassword1" class="form-label">User role</label>
 
                     <select class="form-select form-select-sm" aria-label="Small select example" name="role">
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
+                        <option value="<?=$user_role;?>"> Current role : <?=$user_role;?></option>
+                        <option value="<?=$user_role == "admin" ? "user":"admin";?>">
+                            <?=$user_role == "admin" ? "User":"Admin";?></option>
 
                     </select>
                 </div>
-                <!-- <div class="mb-3 px-5">
-                    <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" name="confirm_password">
-                    
-                </div> -->
+
                 <div class="mb-3 px-5"><button type="submit" class="btn btn-dark w-100">Update infomation <span><svg
                                 xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#e1d5d5"
                                 viewBox="0 0 256 256">

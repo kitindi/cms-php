@@ -83,13 +83,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                 <td><?=$user['username'];?></td>
                                 <td><?=$user['email'];?></td>
                                 <td><?=$user['role'];?></td>
-                                <td><?php 
-                                   if($user['active'] ==1){
-                                   echo '<span class="text-success fw-bold">Active</span>';
-                                }else{
-                                 echo '<span class="text-danger fw-bold">Inactive</span>';
-                                }
-                                ?></td>
+                                <td>
+                                    <?=$user['active'] == 'active' ? '<span class="text-success">Active</span>':'<span class="text-danger">Not Active</span>';?>
+                                </td>
                                 <!-- <td><?=$user['added'];?></td> -->
                                 <td><?=date('F d, Y h:mA', strtotime($user['added']))?></td>
                                 <td class="d-flex gap-3 ">
