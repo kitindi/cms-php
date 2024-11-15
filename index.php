@@ -10,24 +10,24 @@ $errorMessage ='';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
-    // $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $password = $_POST['password'];
+    $password =$_POST['password'];
+    // $password = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE email = :email AND password = :password AND active = 1";
+    $sql = "SELECT * FROM users WHERE email = :email";
    
     $stement = $conn->prepare($sql);
-    $stement->execute(['email' => $email, 'password' => $password]);
+    $stement->execute(['email' => $email]);
    
     $user = $stement->fetch(PDO::FETCH_ASSOC);
     
-    if ($user) {
+    if ($user && password_verify($_POST['password'], $user['password'])) {
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['user_name'] = $user['username'];
         $_SESSION['user_email'] = $user['email'];
         header('Location: dashboard.php');
         die();
     } else {
-       $errorMessage = "Please provide your email or password";
+       $errorMessage = "Please provide correct email or password";
     }
     
 

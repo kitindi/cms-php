@@ -9,25 +9,30 @@ include 'include/header.php';
 $errorMessage ='';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
     $email = $_POST['email'];
-    // $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    // $confirm_password = password_hash($_POST['confirm_password'], PASSWORD_DEFAULT);
 
-    $sql = "SELECT * FROM users WHERE email = :email AND password = :password AND active = 1";
-   
+    // echo $confirm_password."<br>";
+    // echo $password;
+    // echo $email;
+    // echo $username;
+
+//    check if user already exists
+    $sql = "SELECT * FROM users WHERE email = :email AND active = 1";
     $stement = $conn->prepare($sql);
-    $stement->execute(['email' => $email, 'password' => $password]);
-   
+    $stement->execute(['email' => $email]);
     $user = $stement->fetch(PDO::FETCH_ASSOC);
-    
     if ($user) {
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['user_name'] = $user['username'];
-        $_SESSION['user_email'] = $user['email'];
-        header('Location: dashboard.php');
-        die();
-    } else {
-       $errorMessage = "Please provide your email or password";
+        $errorMessage = "User already exists";
+    }else{
+        // insert user into database
+          $sql = "INSERT INTO users (email, password, username) VALUES (:email, :password, :username)";
+            $stement = $conn->prepare($sql);
+            $stement->execute(['email' => $email, 'password' => $password, 'username' => $username]);
+            header('Location: index.php');
+            die();
     }
     
 
@@ -66,27 +71,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-md-6 px-5">
-            <form class="px-5 py-3 ">
+            <form class="px-5 py-3 " method="POST" action="<?php $_SERVER['PHP_SELF'];?>">
                 <div class="px-5 text-center">
                     <h3>Sign up</h3>
                 </div>
                 <div class="mb-3 px-5">
-                    <label for="exampleInputPassword1" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="exampleInputPassword1">
+                    <label for="exampleInputPassword1" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" name="username">
                 </div>
                 <div class="mb-3 px-5">
                     <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        name="email" required>
 
                 </div>
                 <div class="mb- px-5">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                    <p class="text-sm text-danger pb-2 pt-1"><?=$errorMessage;?></p>
                 </div>
-                <div class="mb-3 px-5">
+                <!-- <div class="mb-3 px-5">
                     <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="confirm_password">
+                    
+                </div> -->
                 <div class="mb-3 px-5"><button type="submit" class="btn btn-dark w-100">Signup <span><svg
                                 xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#e1d5d5"
                                 viewBox="0 0 256 256">
@@ -96,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </svg></span></button></div>
 
                 <div class="mb-3 px-5">
-                    <p class="text-center">Already have an account? <a href="index.php">Login</a></p>
+                    <p class="text-center">Already have an account? <a href="index.php">Signin</a></p>
                 </div>
 
             </form>

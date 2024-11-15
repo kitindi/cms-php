@@ -14,6 +14,27 @@ $statement = $conn->prepare($sql);
 $statement ->execute();
 $users = $statement ->fetchAll(PDO::FETCH_ASSOC);
 
+
+//  add new users to database
+
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = sha1($_POST['password']);
+
+    echo $email;
+
+    // Error message
+    $emailError ='';
+    
+    if(filter_input(INPUT_POST, $email, FILTER_SANITIZE_EMAIL)){
+        $emailError ="Invalid email address";
+    }
+
+
+}
+
 ?>
 
 <div class="container">
@@ -39,8 +60,7 @@ $users = $statement ->fetchAll(PDO::FETCH_ASSOC);
             <div class="row d-flex justify-content-center">
                 <div class="col-md-12 mb-3">
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop">Add new user</button>
+                        <a href="add_user.php" type="button" class="btn btn-dark">Add new user</a>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -87,59 +107,7 @@ $users = $statement ->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
-    <div class="row">
-        <!-- Button trigger modal -->
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            Launch static backdrop modal
-        </button> -->
 
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row d-flex justify-content-center">
-
-                            <form class=" py-3 ">
-                                <div class="px-5 text-center">
-                                    <h4>Create New User</h4>
-                                </div>
-                                <div class="mb-3 px-5">
-                                    <label for="exampleInputPassword1" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="exampleInputPassword1">
-                                </div>
-                                <div class="mb-3 px-5">
-                                    <label for="exampleInputEmail1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1"
-                                        aria-describedby="emailHelp">
-
-                                </div>
-                                <div class="mb- px-5">
-                                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1">
-                                </div>
-                                <div class="mb-3 px-5">
-                                    <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1">
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Understood</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 
