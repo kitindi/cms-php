@@ -45,7 +45,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <h2>Current Users</h2>
                     <div class="d-flex gap-4 align-items-center">
                         <a href="dashboard.php">Dashboard</a>
-                        <a href="users.php">User Management</a>
                         <a href="posts.php">Post Management</a>
                     </div>
 
@@ -70,6 +69,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                 <!-- <th scope="col">User Id</th> -->
                                 <th scope="col">Username</th>
                                 <th scope="col">Email</th>
+                                <th scope="col">User Role</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Joined</th>
                                 <th scope="col">Action</th>
@@ -82,6 +82,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                 <!-- <th scope="row"><?=$user['user_id'];?></th> -->
                                 <td><?=$user['username'];?></td>
                                 <td><?=$user['email'];?></td>
+                                <td><?=$user['role'];?></td>
                                 <td><?php 
                                    if($user['active'] ==1){
                                    echo '<span class="text-success fw-bold">Active</span>';
