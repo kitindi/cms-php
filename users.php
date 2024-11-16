@@ -23,7 +23,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = $_POST['email'];
     $password = sha1($_POST['password']);
 
-    echo $email;
+    var_dump($_POST);
 
     // Error message
     $emailError ='';
@@ -59,7 +59,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <div class="row d-flex justify-content-center">
                 <div class="col-md-12 mb-3">
                     <div class="d-flex justify-content-end">
-                        <a href="add_user.php" type="button" class="btn btn-dark">Add new user</a>
+                        <!-- <a href="add_user.php" type="button" class="btn btn-dark" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">Add new user</a> -->
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -102,6 +103,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </table>
                 </div>
             </div>
+        </div>
+        <!-- Model section -->
+        <div>
+
         </div>
     </div>
 
